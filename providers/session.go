@@ -8,6 +8,6 @@ func SessionProvider() *session.Session {
 	return sessionP
 }
 
-func SetSessionProvider(session *session.Session) {
+func SetUpSessionProvider(session *session.Session) {
 	sessionP = session
 }

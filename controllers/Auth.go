@@ -6,6 +6,7 @@ import (
 
 	"github.com/RedGhoul/bookshelf/models"
 	"github.com/RedGhoul/bookshelf/providers"
+	repos "github.com/RedGhoul/bookshelf/repo"
 	"github.com/gofiber/fiber"
 )
 
@@ -23,7 +24,7 @@ func PostRegisterForm(c *fiber.Ctx) {
 		c.Send("Your passwords didn't match")
 	}
 	// Find user
-	user := models.GetUserByUsername(username)
+	user := repos.GetUserByUsername(username)
 	if user.ID == 0 {
 		fmt.Println("This is the user submitted password", password1)
 		newHash, err := providers.HashProvider().CreateHash(password1)
@@ -36,7 +37,7 @@ func PostRegisterForm(c *fiber.Ctx) {
 		newUser.Username = username
 		newUser.Password = newHash
 
-		models.CreateUser(&newUser)
+		repos.CreateUser(&newUser)
 		c.Redirect("/Login")
 	}
 	c.Send("Could not register")
@@ -52,7 +53,7 @@ func PostLoginForm(c *fiber.Ctx) {
 	username := c.FormValue("username")
 	fmt.Println(username)
 	// Find user
-	user := models.GetUserByUsername(username)
+	user := repos.GetUserByUsername(username)
 	fmt.Println(user)
 	fmt.Println(user.Username)
 	if providers.HashProvider() != nil {

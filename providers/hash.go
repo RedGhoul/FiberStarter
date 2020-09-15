@@ -1,7 +1,7 @@
 package providers
 
 import (
-	"fmt"
+	"log"
 
 	hashing "github.com/thomasvvugt/fiber-hashing"
 )
@@ -12,7 +12,7 @@ func HashProvider() hashing.Driver {
 	return hash
 }
 
-func SetHashProvider() {
+func SetUpHashProvider() {
 	hash = hashing.New()
-	fmt.Println(hash)
+	log.Println(hash)
 }
