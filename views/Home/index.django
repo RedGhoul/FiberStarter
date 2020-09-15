@@ -1,0 +1,5 @@
+{% include "views/partials/header.django" %}
+<script  type="text/javascript" src="/asset/site.js"></script>
+<h1>{{ Title }}</h1>
+
+{% include "views/partials/footer.django" %}

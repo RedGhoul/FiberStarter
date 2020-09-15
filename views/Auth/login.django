@@ -1,0 +1,11 @@
+{% include "views/partials/header.django" %}
+<form action="/Login" method="post">
+  <label for="fname">username:</label><br>
+  <input type="text" id="username" name="username" value="John"><br>
+  <label for="lname">password:</label><br>
+  <input type="text" id="password" name="password" value="password"><br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+
+{% include "views/partials/footer.django" %}

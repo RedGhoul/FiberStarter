@@ -1,0 +1,14 @@
+{% include "views/partials/header.django" %}
+<form action="/Register" method="post">
+    <h3>Register</h3>
+  <label for="fname">username:</label><br>
+  <input type="text" id="username" name="username" value="John"><br>
+  <label for="lname">password:</label><br>
+  <input type="text" id="password" name="password" value="password"><br><br>
+    <label for="lname">password re</label><br>
+  <input type="text" id="password2" name="password2" value="password"><br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+
+{% include "views/partials/footer.django" %}

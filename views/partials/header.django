@@ -1,0 +1,4 @@
+<h2>Header</h2>
+<a href="/Logout">Logout</a>
+<a href="/Login">Login</a>
+<a href="/Register">Register</a>
