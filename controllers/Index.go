@@ -1,9 +1,14 @@
 package controllers
 
-import "github.com/gofiber/fiber"
+import (
+	"github.com/RedGhoul/bookshelf/repos"
+	"github.com/gofiber/fiber"
+)
 
 func ShowIndex(c *fiber.Ctx) {
-	if err := c.Render("Home/index", fiber.Map{}); err != nil {
+	users := repos.GetUsers()
+	if err := c.Render("Home/index", fiber.Map{"users": users,
+		"Title": "Hello, World!"}, "layouts/main"); err != nil {
 		c.Status(500).Send(err.Error())
 	}
 }

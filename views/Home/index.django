@@ -1,5 +1,8 @@
 {% include "views/partials/header.django" %}
 <script  type="text/javascript" src="/asset/site.js"></script>
-<h1>{{ Title }}</h1>
-
+{% for user in users %} 
+    <p>{{ user.Username }}</p>
+{% endfor %}
+<p>{{ users }}</p>
+<h1>{{Title}}</h1>
 {% include "views/partials/footer.django" %}

@@ -11,17 +11,17 @@ import (
 )
 
 func main() {
+	//TODO - Got to add some sort of ENV config system
 	database.InitDb()
 	providers.SetUpSessionProvider(session.New())
 	providers.SetUpHashProvider()
+	engine := django.New("./views", ".django")
+	engine.Reload(true)
+	engine.Debug(true)
 	app := fiber.New(&fiber.Settings{
-		Views: setupViewEngine(),
+		Views: engine,
 	})
 	middleware.SetupMiddleware(app)
 	routes.SetupRoutes(app)
 	app.Listen("localhost:3000")
-}
-
-func setupViewEngine() *django.Engine {
-	return django.New("./views", ".django")
 }

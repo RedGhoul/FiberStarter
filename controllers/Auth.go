@@ -6,7 +6,7 @@ import (
 
 	"github.com/RedGhoul/bookshelf/models"
 	"github.com/RedGhoul/bookshelf/providers"
-	repos "github.com/RedGhoul/bookshelf/repo"
+	"github.com/RedGhoul/bookshelf/repos"
 	"github.com/gofiber/fiber"
 )
 

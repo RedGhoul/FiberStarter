@@ -5,24 +5,22 @@ import (
 
 	"github.com/RedGhoul/bookshelf/database"
 	"github.com/RedGhoul/bookshelf/models"
-	"github.com/gofiber/fiber"
 )
 
-func GetUsers(context *fiber.Ctx) {
+func GetUsers() []models.User {
 	db := database.DBConn
-	var books []models.Book
+	var users []models.User
 	//"&" generates a pointer
 	//Find fill in that book array
-	db.Find(&books)
-	context.JSON(books)
+	db.Find(&users)
+	return users
 }
 
-func GetUserById(context *fiber.Ctx) {
-	id := context.Params("id")
+func GetUserByID(userId int) models.User {
 	db := database.DBConn
-	var book models.Book
-	db.Find(&book, id)
-	context.JSON(book)
+	var curUser models.User
+	db.Find(&curUser, userId)
+	return curUser
 }
 
 func GetUserByUsername(username string) models.User {
@@ -38,20 +36,16 @@ func CreateUser(newUser *models.User) {
 	db.Create(newUser)
 }
 
-func DeleteUser(context *fiber.Ctx) {
-	id := context.Params("id")
+func DeleteUser(userId int) bool {
 	db := database.DBConn
 
-	var book models.Book
+	var curUser models.User
 
-	db.First(&book, id)
-	if book.Title == "" {
-		context.Status(500).Send("Not Book Found with given ID")
-		return
+	db.First(&curUser, userId)
+	if curUser.ID == uint(userId) {
+		return false
 	}
 
-	db.Delete(&book)
-
-	context.Send("Book Deleted")
-
+	db.Delete(&curUser)
+	return true
 }
