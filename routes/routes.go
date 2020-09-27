@@ -10,6 +10,7 @@ func SetupRoutes(app *fiber.App) {
 	setupAuthRoutes(app)
 	setupBasicRoutes(app)
 	app.Use(utils.CheckAuth())
+	setupHiddenRoutes(app)
 }
 
 func setupAuthRoutes(app *fiber.App) {
@@ -22,4 +23,8 @@ func setupAuthRoutes(app *fiber.App) {
 
 func setupBasicRoutes(app *fiber.App) {
 	app.Get("/", controllers.ShowIndex)
+}
+
+func setupHiddenRoutes(app *fiber.App) {
+	app.Get("/Secrect", controllers.ShowSecrect)
 }

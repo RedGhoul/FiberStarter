@@ -22,7 +22,7 @@ func StartUp() {
 	app := setupViewEngine()
 	middleware.SetupMiddleware(app)
 	routes.SetupRoutes(app)
-	app.Listen("localhost:3000")
+	setupAppListenPort(app)
 }
 
 func setupViewEngine() *fiber.App {
@@ -42,4 +42,8 @@ func setupViewEngine() *fiber.App {
 	return fiber.New(&fiber.Settings{
 		Views: engine,
 	})
+}
+
+func setupAppListenPort(app *fiber.App) {
+	app.Listen("localhost:" + os.Getenv("SERVERPORT"))
 }

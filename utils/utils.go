@@ -43,6 +43,7 @@ func CheckAuth() fiber.Handler {
 		// Filter request to skip middleware
 		if providers.IsAuthenticated(c) {
 			c.Next()
+			return
 		}
 		c.Redirect("/Login")
 	}

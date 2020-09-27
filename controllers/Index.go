@@ -12,3 +12,9 @@ func ShowIndex(c *fiber.Ctx) {
 		c.Status(500).Send(err.Error())
 	}
 }
+
+func ShowSecrect(c *fiber.Ctx) {
+	if err := c.Render("Home/secrect", fiber.Map{"msg": "I like dogs"}, "layouts/main"); err != nil {
+		c.Status(500).Send(err.Error())
+	}
+}
