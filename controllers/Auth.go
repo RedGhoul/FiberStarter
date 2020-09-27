@@ -1,12 +1,8 @@
 package controllers
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/RedGhoul/fiberstarter/models"
-	"github.com/RedGhoul/fiberstarter/providers"
 	"github.com/RedGhoul/fiberstarter/repos"
+	"github.com/RedGhoul/fiberstarter/utils"
 	"github.com/gofiber/fiber"
 )
 
@@ -23,22 +19,11 @@ func PostRegisterForm(c *fiber.Ctx) {
 	if password1 != password2 {
 		c.Send("Your passwords didn't match")
 	}
-	// Find user
-	user := repos.GetUserByUsername(username)
-	if user.ID == 0 {
-		fmt.Println("This is the user submitted password", password1)
-		newHash, err := providers.HashProvider().CreateHash(password1)
-		if err != nil {
-			c.Send("Could not hash this properly")
+
+	if !repos.CheckIfUserExists(username) {
+		if repos.CreateUser(username, username, password1) {
+			c.Redirect("/Login")
 		}
-		var newUser models.User
-
-		newUser.Email = username
-		newUser.Username = username
-		newUser.Password = newHash
-
-		repos.CreateUser(&newUser)
-		c.Redirect("/Login")
 	}
 	c.Send("Could not register")
 }
@@ -51,40 +36,18 @@ func ShowLoginForm(c *fiber.Ctx) {
 
 func PostLoginForm(c *fiber.Ctx) {
 	username := c.FormValue("username")
-	fmt.Println(username)
-	// Find user
-	user := repos.GetUserByUsername(username)
-	fmt.Println(user)
-	fmt.Println(user.Username)
-	if providers.HashProvider() != nil {
-		password := c.FormValue("password")
-		match, err := providers.HashProvider().MatchHash(password, user.Password)
-		if err != nil {
-			log.Fatalf("Error when matching hash for password: %v", err)
-		}
-		fmt.Println(match)
-		if match {
-			store := providers.SessionProvider().Get(c)
-			defer store.Save()
-			// Set the user ID in the session store
-			store.Set("userid", user.ID)
-			fmt.Printf("User set in session store with ID: %v\n", user.ID)
-			c.Send("You should be logged in successfully!")
-		} else {
-			c.Send("The entered details do not match our records.")
-		}
+	password := c.FormValue("password")
+	didmatch, curuser := utils.MatchPasswords(username, password)
+	if didmatch {
+		utils.SetAuthCookie(curuser, c)
+		c.Send("You should be logged in successfully!")
 	} else {
-		panic("Hash provider was not set")
+		c.Send("The entered details do not match our records.")
 	}
 }
 
 func PostLogoutForm(c *fiber.Ctx) {
-	if providers.IsAuthenticated(c) {
-		store := providers.SessionProvider().Get(c)
-		fmt.Println(store.Get("userid"))
-		store.Delete("userid")
-		store.Save()
-		c.ClearCookie()
+	if utils.RemoveCookie(c) {
 		c.Send("You are now logged out.")
 	}
 	c.Redirect(string(c.Fasthttp.Request.Header.Referer()))

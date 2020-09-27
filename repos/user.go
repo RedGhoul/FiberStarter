@@ -2,12 +2,14 @@ package repos
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/RedGhoul/fiberstarter/database"
 	"github.com/RedGhoul/fiberstarter/models"
+	"github.com/RedGhoul/fiberstarter/providers"
 )
 
-func GetUsers() []models.User {
+func GetAllUsers() []models.User {
 	db := database.DBConn
 	var users []models.User
 	//"&" generates a pointer
@@ -31,9 +33,29 @@ func GetUserByUsername(username string) models.User {
 	return curUser
 }
 
-func CreateUser(newUser *models.User) {
+func CheckIfUserExists(username string) bool {
 	db := database.DBConn
-	db.Create(newUser)
+	var curUser models.User
+	db.Where("username = ?", username).First(&curUser)
+	if curUser.ID == 0 {
+		return false
+	}
+	return true
+}
+
+func CreateUser(username string, email string, password string) bool {
+	db := database.DBConn
+	newHash, err := providers.HashProvider().CreateHash(password)
+	if err != nil {
+		log.Println("failed to create user")
+		return false
+	}
+	var newUser models.User
+	newUser.Email = username
+	newUser.Username = username
+	newUser.Password = newHash
+	db.Create(&newUser)
+	return true
 }
 
 func DeleteUser(userId int) bool {
