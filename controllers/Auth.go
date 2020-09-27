@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/RedGhoul/bookshelf/models"
-	"github.com/RedGhoul/bookshelf/providers"
-	"github.com/RedGhoul/bookshelf/repos"
+	"github.com/RedGhoul/fiberstarter/models"
+	"github.com/RedGhoul/fiberstarter/providers"
+	"github.com/RedGhoul/fiberstarter/repos"
 	"github.com/gofiber/fiber"
 )
 

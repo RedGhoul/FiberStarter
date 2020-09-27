@@ -3,8 +3,8 @@ package routes
 import (
 	"log"
 
-	"github.com/RedGhoul/bookshelf/controllers"
-	"github.com/RedGhoul/bookshelf/providers"
+	"github.com/RedGhoul/fiberstarter/controllers"
+	"github.com/RedGhoul/fiberstarter/providers"
 	"github.com/gofiber/fiber"
 )
 

@@ -1,8 +1,8 @@
 package repos
 
 import (
-	"github.com/RedGhoul/bookshelf/database"
-	"github.com/RedGhoul/bookshelf/models"
+	"github.com/RedGhoul/fiberstarter/database"
+	"github.com/RedGhoul/fiberstarter/models"
 	"github.com/gofiber/fiber"
 )
 

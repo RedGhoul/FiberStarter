@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/RedGhoul/bookshelf/models"
+	"github.com/RedGhoul/fiberstarter/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

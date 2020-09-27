@@ -1,4 +1,4 @@
-module github.com/RedGhoul/bookshelf
+module github.com/RedGhoul/fiberstarter
 
 go 1.15
 

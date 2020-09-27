@@ -3,8 +3,8 @@ package repos
 import (
 	"fmt"
 
-	"github.com/RedGhoul/bookshelf/database"
-	"github.com/RedGhoul/bookshelf/models"
+	"github.com/RedGhoul/fiberstarter/database"
+	"github.com/RedGhoul/fiberstarter/models"
 )
 
 func GetUsers() []models.User {

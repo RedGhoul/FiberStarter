@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/RedGhoul/bookshelf/database"
-	"github.com/RedGhoul/bookshelf/middleware"
-	"github.com/RedGhoul/bookshelf/providers"
-	"github.com/RedGhoul/bookshelf/routes"
+	"github.com/RedGhoul/fiberstarter/database"
+	"github.com/RedGhoul/fiberstarter/middleware"
+	"github.com/RedGhoul/fiberstarter/providers"
+	"github.com/RedGhoul/fiberstarter/routes"
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/session"
 	"github.com/gofiber/template/django"

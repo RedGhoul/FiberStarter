@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/RedGhoul/bookshelf/repos"
+	"github.com/RedGhoul/fiberstarter/repos"
 	"github.com/gofiber/fiber"
 )
 
