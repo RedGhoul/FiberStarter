@@ -3,10 +3,11 @@ package utils
 import (
 	"log"
 
-	"github.com/RedGhoul/fiberstarter/models"
-	"github.com/RedGhoul/fiberstarter/providers"
-	"github.com/RedGhoul/fiberstarter/repos"
-	"github.com/gofiber/fiber"
+	"fiberstarter/models"
+	"fiberstarter/providers"
+	"fiberstarter/repos"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func MatchPasswords(username string, password string) (bool, *models.User) {
@@ -22,14 +23,14 @@ func MatchPasswords(username string, password string) (bool, *models.User) {
 }
 
 func SetAuthCookie(curuser *models.User, c *fiber.Ctx) {
-	store := providers.SessionProvider().Get(c)
+	store, _ := providers.SessionProvider().Get(c)
 	defer store.Save()
 	store.Set("userid", curuser.ID)
 }
 
 func RemoveCookie(c *fiber.Ctx) bool {
 	if providers.IsAuthenticated(c) {
-		store := providers.SessionProvider().Get(c)
+		store, _ := providers.SessionProvider().Get(c)
 		store.Delete("userid")
 		store.Save()
 		c.ClearCookie()
@@ -39,12 +40,12 @@ func RemoveCookie(c *fiber.Ctx) bool {
 }
 
 func CheckAuth() fiber.Handler {
-	return func(c *fiber.Ctx) {
+	return func(c *fiber.Ctx) error {
 		// Filter request to skip middleware
 		if providers.IsAuthenticated(c) {
-			c.Next()
-			return
+			return c.Next()
+
 		}
-		c.Redirect("/Login")
+		return c.Redirect("/Login")
 	}
 }

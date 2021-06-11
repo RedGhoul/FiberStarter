@@ -1,9 +1,10 @@
 package routes
 
 import (
-	"github.com/RedGhoul/fiberstarter/controllers"
-	"github.com/RedGhoul/fiberstarter/utils"
-	"github.com/gofiber/fiber"
+	"fiberstarter/controllers"
+	"fiberstarter/utils"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(app *fiber.App) {

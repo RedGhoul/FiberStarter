@@ -1,9 +1,10 @@
 package repos
 
 import (
-	"github.com/RedGhoul/fiberstarter/database"
-	"github.com/RedGhoul/fiberstarter/models"
-	"github.com/gofiber/fiber"
+	"fiberstarter/database"
+	"fiberstarter/models"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func GetBooks(context *fiber.Ctx) {
@@ -61,12 +62,12 @@ func DeleteBooks(context *fiber.Ctx) {
 
 	db.First(&book, id)
 	if book.Title == "" {
-		context.Status(500).Send("Not Book Found with given ID")
+		context.Status(500).SendString("Not Book Found with given ID")
 		return
 	}
 
 	db.Delete(&book)
 
-	context.Send("Book Deleted")
+	context.SendString("Book Deleted")
 
 }

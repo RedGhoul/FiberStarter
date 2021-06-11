@@ -1,19 +1,16 @@
-module github.com/RedGhoul/fiberstarter
+module fiberstarter
 
-go 1.15
+go 1.16
 
 require (
-	github.com/cosmtrek/air v1.21.2 // indirect
-	github.com/creack/pty v1.1.11 // indirect
-	github.com/gofiber/fiber v1.14.5
-	github.com/gofiber/helmet v0.1.2
-	github.com/gofiber/session v1.2.3
-	github.com/gofiber/template v1.5.5
-	github.com/imdario/mergo v0.3.11 // indirect
-	github.com/joho/godotenv v1.3.0
-	github.com/pelletier/go-toml v1.8.1 // indirect
-	github.com/thomasvvugt/fiber-hashing v0.0.0-20200511145001-a62bb48860d5
-	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
-	gorm.io/driver/postgres v1.0.0
-	gorm.io/gorm v1.20.0
+	github.com/MagnusFrater/helmet v1.0.0 // indirect
+	github.com/andybalholm/brotli v1.0.3 // indirect
+	github.com/gofiber/fiber/v2 v2.12.0 // indirect
+	github.com/gofiber/template v1.6.11 // indirect
+	github.com/joho/godotenv v1.3.0 // indirect
+	github.com/klauspost/compress v1.13.0 // indirect
+	github.com/thomasvvugt/fiber-hashing v0.0.0-20200511145001-a62bb48860d5 // indirect
+	golang.org/x/sys v0.0.0-20210611083646-a4fc73990273 // indirect
+	gorm.io/driver/postgres v1.1.0 // indirect
+	gorm.io/gorm v1.21.10 // indirect
 )

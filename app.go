@@ -5,18 +5,18 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/RedGhoul/fiberstarter/database"
-	"github.com/RedGhoul/fiberstarter/middleware"
-	"github.com/RedGhoul/fiberstarter/providers"
-	"github.com/RedGhoul/fiberstarter/routes"
-	"github.com/gofiber/fiber"
-	"github.com/gofiber/session"
+	"fiberstarter/middleware"
+	"fiberstarter/providers"
+	"fiberstarter/routes"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/template/django"
 	"github.com/joho/godotenv"
 )
 
 func StartUp() {
-	database.InitDb()
+	//database.InitDb()
 	providers.SetUpSessionProvider(session.New())
 	providers.SetUpHashProvider()
 	app := setupViewEngine()
@@ -39,7 +39,7 @@ func setupViewEngine() *fiber.App {
 		engine.Debug(true)
 	}
 
-	return fiber.New(&fiber.Settings{
+	return fiber.New(fiber.Config{
 		Views: engine,
 	})
 }

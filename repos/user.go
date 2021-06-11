@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/RedGhoul/fiberstarter/database"
-	"github.com/RedGhoul/fiberstarter/models"
-	"github.com/RedGhoul/fiberstarter/providers"
+	"fiberstarter/database"
+	"fiberstarter/models"
+	"fiberstarter/providers"
 )
 
 func GetAllUsers() []models.User {
