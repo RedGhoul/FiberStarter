@@ -5,9 +5,10 @@ import (
 	"os"
 	"strconv"
 
-	"fiberstarter/middleware"
-	"fiberstarter/providers"
-	"fiberstarter/routes"
+	"StockTrack/database"
+	"StockTrack/middleware"
+	"StockTrack/providers"
+	"StockTrack/routes"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -16,7 +17,7 @@ import (
 )
 
 func StartUp() {
-	//database.InitDb()
+	database.InitDb()
 	providers.SetUpSessionProvider(session.New())
 	providers.SetUpHashProvider()
 	app := setupViewEngine()

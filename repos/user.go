@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"fiberstarter/database"
-	"fiberstarter/models"
-	"fiberstarter/providers"
+	"StockTrack/database"
+	"StockTrack/models"
+	"StockTrack/providers"
 )
 
 func GetAllUsers() []models.User {

@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"fiberstarter/controllers"
-	"fiberstarter/utils"
+	"StockTrack/controllers"
+	"StockTrack/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,5 +27,5 @@ func setupBasicRoutes(app *fiber.App) {
 }
 
 func setupHiddenRoutes(app *fiber.App) {
-	app.Get("/Secrect", controllers.ShowSecrect)
+	app.Get("/Secret", controllers.ShowSecrect)
 }

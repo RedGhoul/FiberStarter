@@ -1,15 +1,15 @@
 package database
 
 import (
+	"StockTrack/models"
 	"log"
+	"net/url"
 	"os"
 	"strconv"
 	"time"
 
-	"fiberstarter/models"
-
 	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -38,17 +38,13 @@ func InitDb() {
 	}
 
 	var err error
-	dsn := "user=" + os.Getenv("DBUSER") +
-		" password=" + os.Getenv("DBPASSWORD") +
-		" dbname=" + os.Getenv("DBNAME") +
-		" port=" + os.Getenv("DBPORT") +
-		" sslmode=" + os.Getenv("DBSSLMODE")
+	db_connection_url, err := url.Parse("sqlserver://" + os.Getenv("DBUSER") + ":" + url.QueryEscape(os.Getenv("DBPASSWORD")) + "@" + os.Getenv("DBPORT") + "?database=" + os.Getenv("DBNAME"))
 	if DebugFlag {
-		DBConn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+		DBConn, err = gorm.Open(sqlserver.Open(db_connection_url.String()), &gorm.Config{
 			Logger: newLogger,
 		})
 	} else {
-		DBConn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		DBConn, err = gorm.Open(sqlserver.Open(db_connection_url.String()), &gorm.Config{})
 	}
 
 	if err != nil {

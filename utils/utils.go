@@ -1,11 +1,12 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 
-	"fiberstarter/models"
-	"fiberstarter/providers"
-	"fiberstarter/repos"
+	"StockTrack/models"
+	"StockTrack/providers"
+	"StockTrack/repos"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -24,8 +25,11 @@ func MatchPasswords(username string, password string) (bool, *models.User) {
 
 func SetAuthCookie(curuser *models.User, c *fiber.Ctx) {
 	store, _ := providers.SessionProvider().Get(c)
-	defer store.Save()
-	store.Set("userid", curuser.ID)
+	str := fmt.Sprint(curuser.ID)
+	store.Set("userid", str)
+	if err := store.Save(); err != nil {
+		panic(err)
+	}
 }
 
 func RemoveCookie(c *fiber.Ctx) bool {
