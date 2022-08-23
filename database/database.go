@@ -1,7 +1,7 @@
 package database
 
 import (
-	"StockTrack/models"
+	"FiberStarter/models"
 	"log"
 	"net/url"
 	"os"

@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"StockTrack/controllers"
-	"StockTrack/utils"
+	"FiberStarter/controllers"
+	"FiberStarter/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

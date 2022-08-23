@@ -1,8 +1,8 @@
 package repos
 
 import (
-	"StockTrack/database"
-	"StockTrack/models"
+	"FiberStarter/database"
+	"FiberStarter/models"
 
 	"github.com/gofiber/fiber/v2"
 )

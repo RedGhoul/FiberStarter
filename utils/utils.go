@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"StockTrack/models"
-	"StockTrack/providers"
-	"StockTrack/repos"
+	"FiberStarter/models"
+	"FiberStarter/providers"
+	"FiberStarter/repos"
 
 	"github.com/gofiber/fiber/v2"
 )

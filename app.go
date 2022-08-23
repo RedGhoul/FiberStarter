@@ -5,10 +5,10 @@ import (
 	"os"
 	"strconv"
 
-	"StockTrack/database"
-	"StockTrack/middleware"
-	"StockTrack/providers"
-	"StockTrack/routes"
+	"FiberStarter/database"
+	"FiberStarter/middleware"
+	"FiberStarter/providers"
+	"FiberStarter/routes"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"

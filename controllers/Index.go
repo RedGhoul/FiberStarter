@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"StockTrack/repos"
+	"FiberStarter/repos"
 
 	"github.com/gofiber/fiber/v2"
 )
