@@ -8,19 +8,15 @@ import (
 )
 
 func GetBooks(context *fiber.Ctx) {
-	db := database.DBConn
 	var books []models.Book
-	//"&" generates a pointer
-	//Find fill in that book array
-	db.Find(&books)
+	database.DBConn.Find(&books)
 	context.JSON(books)
 }
 
 func GetBook(context *fiber.Ctx) {
 	id := context.Params("id")
-	db := database.DBConn
 	var book models.Book
-	db.Find(&book, id)
+	database.DBConn.Find(&book, id)
 	context.JSON(book)
 }
 
@@ -47,26 +43,22 @@ func NewBook(context *fiber.Ctx) {
 		Rating: params.Rating,
 	}
 
-	db := database.DBConn
-
-	db.Create(&newBook)
+	database.DBConn.Create(&newBook)
 
 	context.JSON(newBook)
 }
 
 func DeleteBooks(context *fiber.Ctx) {
 	id := context.Params("id")
-	db := database.DBConn
-
 	var book models.Book
 
-	db.First(&book, id)
+	database.DBConn.First(&book, id)
 	if book.Title == "" {
 		context.Status(500).SendString("Not Book Found with given ID")
 		return
 	}
 
-	db.Delete(&book)
+	database.DBConn.Delete(&book)
 
 	context.SendString("Book Deleted")
 

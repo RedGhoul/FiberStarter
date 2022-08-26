@@ -1,11 +1,27 @@
 {% include "partials/header.django" %}
-<form action="/Login" method="post">
-  <label for="fname">username:</label><br>
-  <input type="text" id="username" name="username" value="John"><br>
-  <label for="lname">password:</label><br>
-  <input type="text" id="password" name="password" value="password"><br><br>
-  <input type="submit" value="Submit">
-</form> 
+<div class="container">
+  <div class="row">
+    <div class="col"></div>
+    <div class="col mt-4">
+      <form action="/Login" method="post">
+        <div class="mb-3">
+          <label for="username" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="username" name="username" aria-describedby="username">
+          <div id="username" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" aria-describedby="password">
+        </div>
+        <br><br>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form> 
+    </div>
+    <div class="col"></div>
+    
+  </div>
+</div>
+ 
 
 
 {% include "partials/footer.django" %}

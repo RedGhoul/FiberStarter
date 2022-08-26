@@ -8,6 +8,7 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
+	app.Use(utils.AddLocals())
 	setupAuthRoutes(app)
 	setupBasicRoutes(app)
 	app.Use(utils.CheckAuth())
@@ -27,5 +28,5 @@ func setupBasicRoutes(app *fiber.App) {
 }
 
 func setupHiddenRoutes(app *fiber.App) {
-	app.Get("/Secret", controllers.ShowSecrect)
+	app.Get("/Secret", controllers.ShowSecret, utils.CheckAuth())
 }

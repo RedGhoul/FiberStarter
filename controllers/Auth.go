@@ -8,10 +8,7 @@ import (
 )
 
 func ShowRegisterForm(c *fiber.Ctx) error {
-	if err := c.Render("Auth/register", fiber.Map{}); err != nil {
-		return c.Status(500).SendString(err.Error())
-	}
-	return c.SendStatus(500)
+	return c.Render("Auth/register", fiber.Map{})
 }
 
 func PostRegisterForm(c *fiber.Ctx) error {
@@ -19,7 +16,9 @@ func PostRegisterForm(c *fiber.Ctx) error {
 	password1 := c.FormValue("password")
 	password2 := c.FormValue("password2")
 	if password1 != password2 {
-		return c.SendString("Your passwords didn't match")
+		return c.Render("Common/soft_error", fiber.Map{
+			"error": "Your passwords didn't match",
+		})
 	}
 
 	if !repos.CheckIfUserExists(username) {
@@ -27,31 +26,33 @@ func PostRegisterForm(c *fiber.Ctx) error {
 			return c.Redirect("/Login")
 		}
 	}
-	return c.SendString("Could not register")
+	return c.Render("Common/soft_error", fiber.Map{
+		"error": "Could Not Register",
+	})
 }
 
 func ShowLoginForm(c *fiber.Ctx) error {
-	if err := c.Render("Auth/login", fiber.Map{}); err != nil {
-		return c.Status(500).SendString(err.Error())
-	}
-	return c.SendStatus(500)
+	return c.Render("Auth/login", fiber.Map{})
 }
 
 func PostLoginForm(c *fiber.Ctx) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
-	didmatch, curuser := utils.MatchPasswords(username, password)
-	if didmatch {
-		utils.SetAuthCookie(curuser, c)
-		return c.SendString("You should be logged in successfully!")
+	did_match, cur_user := utils.MatchPasswords(username, password)
+	if did_match {
+		utils.SetAuthCookie(cur_user, c)
+		return c.Redirect("/")
+
 	} else {
-		return c.SendString("The entered details do not match our records.")
+		return c.Render("Common/soft_error", fiber.Map{
+			"error": "The entered details do not match our records.",
+		})
 	}
 }
 
 func PostLogoutForm(c *fiber.Ctx) error {
 	if utils.RemoveCookie(c) {
-		return c.SendString("You are now logged out.")
+		return c.Redirect("/")
 	}
 	return c.Redirect(string(c.Context().Referer()))
 }

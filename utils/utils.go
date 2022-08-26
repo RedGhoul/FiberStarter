@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"log"
 
 	"FiberStarter/models"
@@ -12,21 +11,23 @@ import (
 )
 
 func MatchPasswords(username string, password string) (bool, *models.User) {
-	curuser := repos.GetUserByUsername(username)
-	match, err := providers.HashProvider().MatchHash(password, curuser.Password)
-	if err != nil || match == false {
+	cur_user := repos.GetUserByUsername(username)
+	if cur_user.ID == 0 {
+		return false, nil
+	}
+	match, err := providers.HashProvider().MatchHash(password, cur_user.Password)
+	if err != nil || !match {
 		if err != nil {
 			log.Fatalf("Error when matching hash for password: %v", err)
 		}
 		return false, nil
 	}
-	return true, &curuser
+	return true, &cur_user
 }
 
 func SetAuthCookie(curuser *models.User, c *fiber.Ctx) {
 	store, _ := providers.SessionProvider().Get(c)
-	str := fmt.Sprint(curuser.ID)
-	store.Set("userid", str)
+	store.Set("userid", curuser.ID)
 	if err := store.Save(); err != nil {
 		panic(err)
 	}
@@ -51,5 +52,12 @@ func CheckAuth() fiber.Handler {
 
 		}
 		return c.Redirect("/Login")
+	}
+}
+
+func AddLocals() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		c.Locals("LoggedIn", providers.IsAuthenticated(c))
+		return c.Next()
 	}
 }

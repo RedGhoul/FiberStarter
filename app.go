@@ -1,50 +1,43 @@
 package main
 
 import (
-	"log"
-	"os"
-	"strconv"
-
 	"FiberStarter/database"
 	"FiberStarter/middleware"
 	"FiberStarter/providers"
 	"FiberStarter/routes"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/template/django"
-	"github.com/joho/godotenv"
 )
 
 func StartUp() {
+	providers.InitializeAppConfiguration()
 	database.InitDb()
-	providers.SetUpSessionProvider(session.New())
-	providers.SetUpHashProvider()
-	app := setupViewEngine()
-	middleware.SetupMiddleware(app)
+	app := setupFiberEngine()
 	routes.SetupRoutes(app)
+	middleware.SetupMiddleware(app)
 	setupAppListenPort(app)
 }
 
-func setupViewEngine() *fiber.App {
+func setupFiberEngine() *fiber.App {
 	engine := django.New("./views", ".django")
-
-	configErr := godotenv.Load()
-	if configErr != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	DebugFlag, _ := strconv.ParseBool(os.Getenv("DEBUG"))
-	if DebugFlag {
-		engine.Reload(true)
-		engine.Debug(true)
-	}
+	engine.Reload(providers.AppConfig.Enable_Debug)
+	engine.Debug(providers.AppConfig.Enable_Debug)
 
 	return fiber.New(fiber.Config{
-		Views: engine,
+		Views:             engine,
+		ViewsLayout:       "layouts/main",
+		Prefork:           providers.AppConfig.Enable_PreFork,
+		AppName:           providers.AppConfig.App_Name,
+		Concurrency:       providers.AppConfig.Concurrency_Level,
+		StrictRouting:     true,
+		CaseSensitive:     true,
+		PassLocalsToViews: true,
 	})
 }
 
 func setupAppListenPort(app *fiber.App) {
-	app.Listen("localhost:" + os.Getenv("SERVERPORT"))
+	log.Println("Starting on port: " + providers.AppConfig.Server_Port)
+	app.Listen(":" + providers.AppConfig.Server_Port)
 }
