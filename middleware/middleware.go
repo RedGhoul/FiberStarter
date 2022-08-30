@@ -2,8 +2,6 @@ package middleware
 
 import (
 	"FiberStarter/providers"
-	"os"
-	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -57,7 +55,7 @@ func setup404Handler(app *fiber.App) {
 		if err := c.SendStatus(fiber.StatusNotFound); err != nil {
 			panic(err)
 		}
-		if err := c.Render("errors/404", fiber.Map{}); err != nil {
+		if err := c.Render("common/soft_error", fiber.Map{}); err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 		return err
@@ -65,13 +63,13 @@ func setup404Handler(app *fiber.App) {
 }
 
 func setupRecovery(app *fiber.App) {
-	if DebugFlag, _ := strconv.ParseBool(os.Getenv("FIBER_RECOVER_ENABLED")); DebugFlag {
+	if providers.AppConfig.Enable_Recover {
 		app.Use(recover.New())
 	}
 }
 
 func setupCompression(app *fiber.App) {
-	if DebugFlag, _ := strconv.ParseBool(os.Getenv("FIBER_COMPRESS_ENABLED")); DebugFlag {
+	if providers.AppConfig.Enable_Compression {
 		lvl := compress.Level(2)
 		app.Use(compress.New(compress.Config{
 			Level: lvl,

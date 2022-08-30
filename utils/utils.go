@@ -44,6 +44,14 @@ func RemoveCookie(c *fiber.Ctx) bool {
 	return false
 }
 
+func GetCurrentUserId(c *fiber.Ctx) int {
+	if providers.IsAuthenticated(c) {
+		store, _ := providers.SessionProvider().Get(c)
+		return store.Get("userid").(int)
+	}
+	return 0
+}
+
 func CheckAuth() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		// Filter request to skip middleware
@@ -58,6 +66,7 @@ func CheckAuth() fiber.Handler {
 func AddLocals() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		c.Locals("LoggedIn", providers.IsAuthenticated(c))
+		c.Locals("APPNAME", providers.AppConfig.App_Name)
 		return c.Next()
 	}
 }

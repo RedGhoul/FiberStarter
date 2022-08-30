@@ -1,12 +1,13 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "time"
 
 type Book struct {
-	gorm.Model
-	Title  string `json:"title" gorm:"type:VARCHAR(255);not null"`
-	Author string `json:"author" gorm:"type:VARCHAR(255);not null"`
-	Rating int    `json:"rating" gorm:"type:SMALLINT"`
+	ID        uint      `json:"Id"`
+	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
+	DeletedAt time.Time `json:"DeletedAt"`
+	Title     string    `json:"title"`
+	Author    string    `json:"author"`
+	Rating    int       `json:"rating"`
 }

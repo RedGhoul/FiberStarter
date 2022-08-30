@@ -1,7 +1,6 @@
 package database
 
 import (
-	"FiberStarter/models"
 	"FiberStarter/providers"
 	"log"
 	"os"
@@ -45,8 +44,4 @@ func InitDb() {
 	if err != nil {
 		log.Panic("Failed to connect to the database " + providers.AppConfig.DB_Connection_URL)
 	}
-	log.Println("Connected to DB")
-	DBConn.AutoMigrate(&models.Book{})
-	DBConn.AutoMigrate(&models.User{})
-	log.Println("Ran Auto Migrate")
 }
