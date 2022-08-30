@@ -1,7 +1,11 @@
 {% include "partials/header.django" %}
 <div class="container">
     <div class="row">
-        <p>{{error}}</p>
+        <div class="col"></div>
+        <div class="col">
+            <p>{{error}}</p>
+        </div>
+        <div class="col"></div>
     </div>
 </div>
 {% include "partials/footer.django" %}

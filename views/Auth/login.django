@@ -4,6 +4,7 @@
     <div class="col"></div>
     <div class="col mt-4">
       <form action="/Login" method="post">
+        <h4>Login</h4>
         <div class="mb-3">
           <label for="username" class="form-label">Email address</label>
           <input type="email" class="form-control" id="username" name="username" aria-describedby="username">
@@ -13,7 +14,6 @@
           <label for="password" class="form-label">Password</label>
           <input type="password" class="form-control" id="password" name="password" aria-describedby="password">
         </div>
-        <br><br>
         <button type="submit" class="btn btn-primary">Login</button>
       </form> 
     </div>
