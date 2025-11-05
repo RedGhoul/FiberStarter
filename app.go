@@ -8,7 +8,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/template/django"
+	"github.com/gofiber/template/django/v3"
 )
 
 func StartUp() {
