@@ -1,0 +1,42 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_NAME=FiberStarter
+      - SERVER_PORT=8080
+      - ENABLE_DEBUG=true
+      - ENABLE_PREFORK=false
+      - ENABLE_COMPRESSION=true
+      - ENABLE_RECOVERY=true
+      - CONCURRENCY_LEVEL=200
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=fiberstarter
+      - DB_HOST=db
+      - DB_PORT=3306
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: fiberstarter
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./migrations/m_00001_Up.sql:/docker-entrypoint-initdb.d/001_init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

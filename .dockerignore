@@ -1,0 +1,7 @@
+.git
+.env
+tmp/
+bin/
+.vscode/
+*.md
+LICENSE

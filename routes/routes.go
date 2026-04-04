@@ -2,17 +2,31 @@ package routes
 
 import (
 	"FiberStarter/controllers"
+	"FiberStarter/database"
 	"FiberStarter/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(app *fiber.App) {
+	app.Get("/health", healthCheck)
 	app.Use(utils.AddLocals())
 	setupAuthRoutes(app)
 	setupBasicRoutes(app)
 	app.Use(utils.CheckAuth())
 	setupHiddenRoutes(app)
+}
+
+func healthCheck(c *fiber.Ctx) error {
+	dbStatus := "ok"
+	sqlDB, err := database.DBConn.DB()
+	if err != nil || sqlDB.Ping() != nil {
+		dbStatus = "unavailable"
+	}
+	return c.JSON(fiber.Map{
+		"status":   "ok",
+		"database": dbStatus,
+	})
 }
 
 func setupAuthRoutes(app *fiber.App) {

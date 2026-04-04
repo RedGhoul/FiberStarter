@@ -36,13 +36,27 @@ A modern, production-ready Go web application framework built on Fiber v2 with s
 
 ## Quick Start
 
-### Prerequisites
+### Option A: Docker (Recommended)
+
+The fastest way to get started -- no need to install MySQL locally:
+
+```bash
+git clone <repository-url>
+cd FiberStarter
+docker-compose up --build
+```
+
+Visit `http://localhost:8080` once both services are healthy.
+
+### Option B: Local Setup
+
+#### Prerequisites
 
 - Go 1.24 or higher
 - MySQL 8.0 or higher
 - Git
 
-### Installation
+#### Installation
 
 1. **Clone the repository**
    ```bash
