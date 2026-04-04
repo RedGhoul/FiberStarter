@@ -227,6 +227,7 @@ A launch configuration is included in `.vscode/launch.json`. Press F5 to start d
 
 ### Public Routes
 - `GET /` - Home page
+- `GET /health` - Health check (JSON)
 - `GET /Login` - Login form
 - `POST /Login` - Process login
 - `GET /Register` - Registration form
@@ -235,6 +236,175 @@ A launch configuration is included in `.vscode/launch.json`. Press F5 to start d
 ### Protected Routes (Require Authentication)
 - `GET /Secret` - Example protected page
 - `GET /Logout` - Logout and clear session
+
+## Usage Examples
+
+### Adding a New Page
+
+Create a controller, a view, and register the route.
+
+**1. Add the controller** (`controllers/Products.go`):
+
+```go
+package controllers
+
+import "github.com/gofiber/fiber/v2"
+
+func ShowProducts(c *fiber.Ctx) error {
+    return c.Render("Products/index", fiber.Map{
+        "Title": "Our Products",
+    })
+}
+```
+
+**2. Add the view** (`views/Products/index.django`):
+
+```django
+{% include "partials/header.django" %}
+<div class="container py-3">
+    <h1>{{ Title }}</h1>
+    <p>Product list goes here.</p>
+</div>
+{% include "partials/footer.django" %}
+```
+
+**3. Register the route** in `routes/routes.go`:
+
+```go
+// Inside setupBasicRoutes():
+app.Get("/Products", controllers.ShowProducts)
+```
+
+### Adding a New Model and Database Table
+
+**1. Define the model** (`models/product.go`):
+
+```go
+package models
+
+import "time"
+
+type Product struct {
+    ID        uint      `json:"Id"`
+    CreatedAt time.Time `json:"CreatedAt"`
+    UpdatedAt time.Time `json:"UpdatedAt"`
+    DeletedAt time.Time `json:"DeletedAt"`
+    Name      string    `json:"name"`
+    Price     float64   `json:"price"`
+}
+```
+
+**2. Create a migration** (`migrations/m_00002_Up.sql`):
+
+```sql
+CREATE TABLE IF NOT EXISTS `products` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_products_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+**3. Add a repository** (`repos/product.go`):
+
+```go
+package repos
+
+import (
+    "FiberStarter/database"
+    "FiberStarter/models"
+)
+
+func GetAllProducts() []models.Product {
+    var products []models.Product
+    database.DBConn.Find(&products)
+    return products
+}
+
+func GetProductByID(id int) models.Product {
+    var product models.Product
+    database.DBConn.First(&product, id)
+    return product
+}
+
+func CreateProduct(name string, price float64) bool {
+    product := models.Product{Name: name, Price: price}
+    database.DBConn.Create(&product)
+    return product.ID > 0
+}
+```
+
+### Adding a Protected Route
+
+Any route registered **after** the `app.Use(utils.CheckAuth())` middleware is automatically protected. Unauthenticated users are redirected to `/Login`.
+
+```go
+// In routes/routes.go:
+func SetupRoutes(app *fiber.App) {
+    // ...public routes...
+
+    app.Use(utils.CheckAuth()) // Auth barrier
+
+    // Everything below requires login
+    app.Get("/Dashboard", controllers.ShowDashboard)
+    app.Get("/Profile", controllers.ShowProfile)
+}
+```
+
+### Adding a JSON API Endpoint
+
+You can mix server-rendered pages with JSON endpoints:
+
+```go
+// controllers/Api.go
+package controllers
+
+import (
+    "FiberStarter/repos"
+    "github.com/gofiber/fiber/v2"
+)
+
+func GetProductsJSON(c *fiber.Ctx) error {
+    products := repos.GetAllProducts()
+    return c.JSON(products)
+}
+```
+
+```go
+// In routes/routes.go, add before the auth middleware:
+app.Get("/api/products", controllers.GetProductsJSON)
+```
+
+Test it with curl:
+
+```bash
+curl http://localhost:8080/api/products
+```
+
+### Using the Health Check
+
+The built-in health endpoint reports application and database status:
+
+```bash
+curl http://localhost:8080/health
+# {"database":"ok","status":"ok"}
+```
+
+### Using the Makefile
+
+```bash
+make help          # Show all available commands
+make run           # Start the application
+make build         # Build a binary to bin/fiberstarter
+make test          # Run all tests
+make dev           # Hot reload with Air
+make docker-up     # Start with Docker Compose
+make docker-down   # Stop Docker Compose
+```
 
 ## Security Features
 
