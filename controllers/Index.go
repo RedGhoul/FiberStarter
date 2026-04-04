@@ -1,15 +1,13 @@
 package controllers
 
 import (
-	"FiberStarter/repos"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 func ShowIndex(c *fiber.Ctx) error {
-	users := repos.GetAllUsers()
-	return c.Render("Home/index", fiber.Map{"users": users,
-		"Title": "Hello, World!"})
+	return c.Render("Home/index", fiber.Map{
+		"Title": "Welcome to FiberStarter",
+	})
 }
 
 func ShowSecret(c *fiber.Ctx) error {

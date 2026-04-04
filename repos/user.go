@@ -49,8 +49,8 @@ func CreateUser(username string, email string, password string) bool {
 func DeleteUser(userId int) bool {
 	var curUser models.User
 
-	database.DBConn.First(&curUser, userId)
-	if curUser.ID == uint(userId) {
+	result := database.DBConn.First(&curUser, userId)
+	if result.Error != nil || curUser.ID != uint(userId) {
 		return false
 	}
 

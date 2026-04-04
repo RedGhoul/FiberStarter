@@ -16,6 +16,16 @@ func PostRegisterForm(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	password1 := c.FormValue("password")
 	password2 := c.FormValue("password2")
+
+	if err := utils.ValidateUsername(username); err != nil {
+		return c.Render("Common/soft_error", fiber.Map{"error": err.Error()})
+	}
+	if err := utils.ValidateEmail(email); err != nil {
+		return c.Render("Common/soft_error", fiber.Map{"error": err.Error()})
+	}
+	if err := utils.ValidatePassword(password1); err != nil {
+		return c.Render("Common/soft_error", fiber.Map{"error": err.Error()})
+	}
 	if password1 != password2 {
 		return c.Render("Common/soft_error", fiber.Map{
 			"error": "Your passwords didn't match",
@@ -39,6 +49,11 @@ func ShowLoginForm(c *fiber.Ctx) error {
 func PostLoginForm(c *fiber.Ctx) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
+	if username == "" || password == "" {
+		return c.Render("Common/soft_error", fiber.Map{
+			"error": "Username and password are required",
+		})
+	}
 	did_match, cur_user := utils.MatchPasswords(username, password)
 	if did_match {
 		utils.SetAuthCookie(cur_user, c)

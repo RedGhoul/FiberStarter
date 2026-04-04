@@ -6,6 +6,10 @@ import (
 	"FiberStarter/providers"
 	"FiberStarter/routes"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/django/v3"
@@ -17,7 +21,7 @@ func StartUp() {
 	app := setupFiberEngine()
 	routes.SetupRoutes(app)
 	middleware.SetupMiddleware(app)
-	setupAppListenPort(app)
+	setupGracefulShutdown(app)
 }
 
 func setupFiberEngine() *fiber.App {
@@ -37,7 +41,23 @@ func setupFiberEngine() *fiber.App {
 	})
 }
 
-func setupAppListenPort(app *fiber.App) {
-	log.Println("Starting on port: " + providers.AppConfig.Server_Port)
-	app.Listen(":" + providers.AppConfig.Server_Port)
+func setupGracefulShutdown(app *fiber.App) {
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		log.Println("Starting on port: " + providers.AppConfig.Server_Port)
+		if err := app.Listen(":" + providers.AppConfig.Server_Port); err != nil {
+			log.Fatalf("Server error: %v", err)
+		}
+	}()
+
+	<-quit
+	log.Println("Shutting down server...")
+
+	if err := app.ShutdownWithTimeout(5 * time.Second); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server stopped gracefully")
 }
