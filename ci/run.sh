@@ -12,10 +12,13 @@ label="$label_key=$CI_RUN_ID"
 volume="${CI_RUN_ID}-work"
 network="${CI_RUN_ID}-net"
 
+hardening=(--cap-drop ALL --security-opt no-new-privileges)
+
 # task <name> <image> <cpus> <memory> <script> [extra docker run args...]
+# Steps that only need the already-populated volume pass --network none.
 task() {
   local name=$1 image=$2 cpus=$3 memory=$4 script=$5; shift 5
-  docker run --rm --name "${CI_RUN_ID}-${name}" --label "$label" --init \
+  docker run --rm --name "${CI_RUN_ID}-${name}" --label "$label" --init "${hardening[@]}" \
     --cpus "$cpus" --memory "$memory" --memory-swap "$memory" --pids-limit 2048 \
     --mount "type=volume,src=$volume,dst=/work" -w /work -e CI=true "$@" \
     "$image" bash -Eeuo pipefail -c "$script"
@@ -29,7 +32,7 @@ init() {
   fi
   for image in "$@"; do docker pull -q "$image"; done
   docker volume create --label "$label" "$volume" >/dev/null
-  git archive --format=tar HEAD | docker run -i --rm --label "$label" --network none \
+  git archive --format=tar HEAD | docker run -i --rm --label "$label" --network none "${hardening[@]}" \
     --mount "type=volume,src=$volume,dst=/work" "$1" tar -xf - -C /work
   git rev-parse HEAD
 }
@@ -60,9 +63,9 @@ go_env=(-e GOTOOLCHAIN=local -e GOFLAGS=-mod=readonly -e GOMODCACHE=/work/.cache
 case "${1:-}" in
   init) init "$GO_IMAGE" ;;
   deps) task deps "$GO_IMAGE" 2 2g 'go version && go mod download' "${go_env[@]}" ;;
-  vet) task vet "$GO_IMAGE" 2 3g 'go vet ./...' "${go_env[@]}" ;;
-  build) task build "$GO_IMAGE" 2 3g 'go build ./...' "${go_env[@]}" ;;
-  test) task test "$GO_IMAGE" 2 3g 'go test ./... -v' "${go_env[@]}" ;;
+  vet) task vet "$GO_IMAGE" 2 3g 'go vet ./...' "${go_env[@]}" --network none ;;
+  build) task build "$GO_IMAGE" 2 3g 'go build ./...' "${go_env[@]}" --network none ;;
+  test) task test "$GO_IMAGE" 2 3g 'go test ./... -v' "${go_env[@]}" --network none ;;
   cleanup) cleanup ;;
   *) echo 'Usage: ci/run.sh init|deps|vet|build|test|cleanup' >&2; exit 2 ;;
 esac
